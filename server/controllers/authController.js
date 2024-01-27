@@ -1,7 +1,8 @@
 import userModel from "../models/userModel.js";
 import bcrypt from 'bcrypt'
+import { handleError } from "../utils/error.js";
 
-export const SignUp = async (req,res)=>{
+export const SignUp = async (req,res,next)=>{
     try {
         const {username,email,password} = req.body;
         // const userExist = await userModel.findOne({email:email})
@@ -11,7 +12,7 @@ export const SignUp = async (req,res)=>{
         // }
 
         if(!username || !email || !password || username === '' || email === '' || password === ''){
-            res.status(400).json({message: "All fields are required"});
+            next(handleError(400, "All fields are required"))
         }
 
         const hashedPassword = await bcrypt.hash(password,10)
