@@ -6,16 +6,18 @@ const app = express()
 const port = process.env.PORT 
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-
+// import cors from 'cors'
 
 // database connection
 connDB();
 
+// app.use(cors())
+
 app.use(express.json())
 
 // routes
-app.use('/user',userRoutes)
-app.use('/auth',authRoutes)
+app.use('/server/user',userRoutes)
+app.use('/server/auth',authRoutes)
 
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`);

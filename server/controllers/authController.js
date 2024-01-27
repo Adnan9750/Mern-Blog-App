@@ -21,7 +21,7 @@ export const SignUp = async (req,res,next)=>{
         await newUser.save();
         res.json("SignUp Successfully")    
     } catch (error) {
-        res.status(500).json({message:error.message})
+        next(error)
     }
     
 }
