@@ -1,31 +1,55 @@
-import { Button, Label, TextInput } from 'flowbite-react'
+import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const SignUp = () => {
 
   const [formData,setFormData] = useState({})
+  const [error,setError] = useState({
+    status : '',
+    message:''
+  })
+  const [loading,setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
 
     setFormData({
       ...formData,
-      [e.target.id]:e.target.value
+      [e.target.id]:e.target.value.trim()
     })
   }
 
   const formSubmit = async (e) => {
     e.preventDefault()
-    const res = await axios.post('/server/auth/signup', formData)
-    document.getElementById('signup-form').reset()
-    // console.log(res.data);
+    if(!formData.username || !formData.email || !formData.password){
+      return setError({status: 'failure',message:'Please Fill all fields'})
+    }
+
+    try {
+      setLoading(true)
+      setError(null)
+      const res = await axios.post('/server/auth/signup', formData);
+      document.getElementById('signup-form').reset();
+      setError({ status: 'success', message: res.data.message });
+
+      setLoading(false)
+      setTimeout(()=>{
+          navigate('/sign-in')
+        },2000)
+      
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return setError({ status: 'failure', message: error.response.data.message });
+      }
+    }
   }
 
 
   return (
     <>
-      <div className='min-h-screen mt-20'>
+      <div className='min-h-screen mt-12'>
         <h1 className='text-center text-2xl font-semibold'>SignUp</h1>
         <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center md:shadow-lg
          rounded-lg gap-2'>
@@ -59,8 +83,15 @@ const SignUp = () => {
                 <Label value='Your Password'/>
                 <TextInput type='password' placeholder='Password' id='password' onChange={handleChange}/>
               </div>
-              <Button gradientDuoTone='purpleToPink' type='submit'>
-                Sign Up
+              <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
+                {
+                  loading ? (
+                    <>
+                      <Spinner size='sm'/>
+                      <span className='pl-3'>loading ...</span>
+                    </>
+                  ) : 'Sign Up'
+                }
               </Button>
             </form>
             <div className='mt-3 flex gap-2'>
@@ -69,6 +100,13 @@ const SignUp = () => {
                 SignIn
               </Link>
             </div>
+            {
+              error && (
+                <Alert className='mt-5' color={error.status}>
+                  {error.message}
+                </Alert>
+              )
+            }
           </div>
         </div>
       </div>

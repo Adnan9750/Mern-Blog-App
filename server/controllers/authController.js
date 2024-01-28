@@ -8,7 +8,7 @@ export const SignUp = async (req,res,next)=>{
         // const userExist = await userModel.findOne({email:email})
 
         // if(userExist) {
-        //     res.json({message:"Email Already Exists"})
+        //     res.status(500).json("Email Already Exists")
         // }
 
         if(!username || !email || !password || username === '' || email === '' || password === ''){
