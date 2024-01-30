@@ -29,26 +29,34 @@ export const SignUp = async (req,res,next)=>{
 
 export const SignIn = async (req, res,next) => {
     const {email,password} = req.body;
-    const userExist = await userModel.findOne({email:email})
-
-    if(userExist){
-
-        const matchPassword = await bcrypt.compare(password,userExist.password)
-
-        if(userExist.email === email && matchPassword){
-
-            const jwttoken = jwt.sign({userId:userExist._id},process.env.SECRET_KEY)
-            const {password,...rest} = userExist._doc
-
-            res
-            .cookie('access_token',jwttoken,{ httpOnly: true, secure: false , SameSite: 'None'})
-            .status(200)
-            .json({"message":"Login Successfully","useData":rest})
-
-        }else{
-            return res.status(401).json('Invalid Credentials')
-        }
-    }else{
-        next(404,'User not found')
+    if(!email || !password || email === '' || password === '') {
+        return res.status(400).json('All fields are required')
     }
+    try {
+        const userExist = await userModel.findOne({email:email})
+    
+        if(userExist){
+    
+            const matchPassword = await bcrypt.compare(password,userExist.password)
+    
+            if(userExist.email === email && matchPassword){
+    
+                const jwttoken = jwt.sign({userId:userExist._id},process.env.SECRET_KEY)
+                const {password,...rest} = userExist._doc;
+    
+                res
+                .cookie('access_token',jwttoken,{ httpOnly: true, secure: false , SameSite: 'None'})
+                .status(200)
+                .json({"message":"Login Successfully","useData":rest,"token":jwttoken})
+    
+            }else{
+                return res.status(401).json('Invalid Credentials')
+            }
+        }else{
+            return res.status(404).json('User Not Found')
+        } 
+    } catch (error) {
+        next(error)
+    }
+    
 }
