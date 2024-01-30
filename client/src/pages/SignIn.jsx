@@ -55,7 +55,7 @@ const SignIn = () => {
             <img src='/signin.png' />
           </div>
           {/* right */}
-          <div className='flex-1 order-1'>
+          <div className='flex-1 order-1 px-8 sm:px-14 md:px-0'>
             <h1 className='text-center text-3xl font-semibold'>Sign In</h1>
             <form className='flex flex-col gap-4 mt-5' onSubmit={formSubmit} id='signin-form'>
               <div>
