@@ -47,13 +47,13 @@ export const SignIn = async (req, res,next) => {
                 res
                 .cookie('access_token',jwttoken,{ httpOnly: true, secure: false , SameSite: 'None'})
                 .status(200)
-                .json({"message":"Login Successfully","useData":rest,"token":jwttoken})
+                .json({"status":"success","message":"Login Successfully","useData":rest,"token":jwttoken})
     
             }else{
-                return res.status(401).json('Invalid Credentials')
+                return res.json({"status":"failed","message":'Invalid Credentials'})
             }
         }else{
-            return res.status(404).json('User Not Found')
+            return res.json({"status":"failed","message":'User Not Found'})
         } 
     } catch (error) {
         next(error)

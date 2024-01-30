@@ -49,14 +49,13 @@ const SignUp = () => {
 
   return (
     <>
-      <div className='min-h-screen mt-10'>
-        <h1 className='text-center text-3xl font-semibold'>SignUp</h1>
+      <div className='min-h-[90vh] mt-10'>
         <div className='flex mt-4 p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center 
          rounded-lg gap-2'>
           {/* left */}
             
-          <div className='flex-1 self-center '>
-            <img src='/signup1.png' />
+          <div className='flex-1 self-center order-2 md:order-1'>
+            <img src='/signup1.png'/>
             {/* <div className='font-bold dark:text-white text-4xl'>
               <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
                       rounded-md text-white'>
@@ -69,8 +68,9 @@ const SignUp = () => {
             </p> */}
           </div>
           {/* right */}
-          <div className='flex-1'>
-            <form className='flex flex-col gap-4' onSubmit={formSubmit} id='signup-form'>
+          <div className='flex-1 order-1 md:order-2 px-8 md:px-0'>
+          <h1 className='text-center text-3xl font-semibold'>SignUp</h1>
+            <form className='flex flex-col gap-4 mt-4' onSubmit={formSubmit} id='signup-form'>
               <div>
                 <Label value='Your username'/>
                 <TextInput type='text' placeholder='username' id='username' onChange={handleChange}/>
