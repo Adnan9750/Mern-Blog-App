@@ -19,7 +19,7 @@ const SignIn = () => {
   const handleChange = (e) =>{
     setFormData({
       ...formData,
-      [e.target.id] : e.target.value
+      [e.target.id] : e.target.value.trim()
     })
   }
 
@@ -27,7 +27,7 @@ const SignIn = () => {
     e.preventDefault()
 
     if(formData.email && formData.password){
-      // setLoading(true)
+
       dispatch(signInStart())
       // Form submission
       const res = await axios.post('/server/auth/signin',formData)
@@ -37,7 +37,8 @@ const SignIn = () => {
 
         setTimeout(()=>{
           dispatch(signInSuccess(res.data.userData))
-          // storeToken(res.data.token)
+          // store token in localStorage
+          storeToken(res.data.token)
           navigate('/')
         },2000)
       }
@@ -49,11 +50,11 @@ const SignIn = () => {
     }
   }
 
-  // const token = getToken('token')
+  const token = getToken('token')
 
-  // useEffect(()=>{
-  //   dispatch(setUserToken({token:token}))
-  // },[token,dispatch])
+  useEffect(()=>{
+    dispatch(setUserToken({clientToken:token}))
+  },[token,dispatch])
 
   return (
     <>
