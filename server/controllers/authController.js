@@ -47,7 +47,7 @@ export const SignIn = async (req, res,next) => {
                 res
                 .cookie('access_token',jwttoken,{ httpOnly: true, secure: false , SameSite: 'None'})
                 .status(200)
-                .json({"status":"success","message":"Login Successfully","useData":rest,"token":jwttoken})
+                .json({"status":"success","message":"Login Successfully","userData":rest,"token":jwttoken})
     
             }else{
                 return res.json({"status":"failed","message":'Invalid Credentials'})

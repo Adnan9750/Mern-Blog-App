@@ -1,17 +1,19 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { signInStart, signInSuccess, signinFailure } from '../redux/slices/userSlice'
+import { getToken, storeToken } from '../services/LocalStorageService'
+import { setUserToken } from '../redux/slices/tokenSlice'
 
 const SignIn = () => {
 
+  const dispatch = useDispatch()
+  const {loading,error} = useSelector((state)=> state.user)
+  
   const [formData,setFormData] = useState({})
-  const [error,setError] = useState({
-    status:false,
-    message:'',
-    errorType:''
-  })
-  const [loading,setLoading] = useState(false)
+
   const navigate = useNavigate()
 
   const handleChange = (e) =>{
@@ -25,24 +27,33 @@ const SignIn = () => {
     e.preventDefault()
 
     if(formData.email && formData.password){
-      setLoading(true)
+      // setLoading(true)
+      dispatch(signInStart())
       // Form submission
       const res = await axios.post('/server/auth/signin',formData)
       // console.log(res); 
       if(res.data.status === 'success'){
-        setError({status:true,message:res.data.message,errorType:'success'})
+        dispatch(signInSuccess({status: true, message: res.data.message,errorType:'success'}))
+
         setTimeout(()=>{
+          dispatch(signInSuccess(res.data.userData))
+          // storeToken(res.data.token)
           navigate('/')
         },2000)
-        setLoading(false)
       }
       if(res.data.status === 'failed'){
-        setError({status:true,message:res.data.message,errorType:'failure'})
+        dispatch(signinFailure({status: true, message: res.data.message,errorType:'failure'}))
       }
     }else{
-      return setError({status:'failure',message:"Please Fill all fields",errorType:'failure'})
+      dispatch(signinFailure({status: true, message: "Please Fill all fields",errorType:'failure'}))
     }
   }
+
+  // const token = getToken('token')
+
+  // useEffect(()=>{
+  //   dispatch(setUserToken({token:token}))
+  // },[token,dispatch])
 
   return (
     <>
