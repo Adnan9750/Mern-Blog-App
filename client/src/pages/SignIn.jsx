@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signInStart, signInSuccess, signinFailure } from '../redux/slices/userSlice'
 import { getToken, storeToken } from '../services/LocalStorageService'
 import { setUserToken } from '../redux/slices/tokenSlice'
+import GoogleAuth from '../components/GoogleAuth'
 
 const SignIn = () => {
 
@@ -88,6 +89,7 @@ const SignIn = () => {
                   ) : 'Sign In'
                 }
               </Button>
+              <GoogleAuth/>
             </form>
             <div className='mt-3 flex gap-2'>
               <span>Don't have an acoount?</span>

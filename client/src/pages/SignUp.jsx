@@ -2,6 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import GoogleAuth from '../components/GoogleAuth'
 
 const SignUp = () => {
 
@@ -23,7 +24,7 @@ const SignUp = () => {
 
   const formSubmit = async (e) => {
     e.preventDefault()
-    
+
     if(!formData.username || !formData.email || !formData.password){
       return setError({status: 'failure',message:'Please Fill all fields'})
     }
@@ -94,6 +95,7 @@ const SignUp = () => {
                   ) : 'Sign Up'
                 }
               </Button>
+              <GoogleAuth/>
             </form>
             <div className='mt-3 flex gap-2'>
               <span>Have an acoount?</span>
