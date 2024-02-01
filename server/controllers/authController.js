@@ -60,3 +60,32 @@ export const SignIn = async (req, res,next) => {
     }
     
 }
+
+export const GoogleSignIn = async (req,res,next) => {
+    try {
+        const userExist = await userModel.findOne({email:req.body.email})
+        if(userExist) {
+            const jwttoken = jwt.sign({userId:userExist._id}, process.env.SECRET_KEY)
+            const {password:password, ...rest} = userExist._doc
+            res
+                .cookie('access_token',jwttoken,{httpOnly:true,secure: false})
+                .status(200)
+                .json(rest)
+        }else {
+            const generatePassword = Math.random().toString(36).slice(8) + Math.random().toString(36).slice(8);
+            const hashedPassword = await bcrypt.hash(generatePassword,10)
+            const newUser = await userModel({
+                username: req.body.username.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-4),
+                email : req.body.email,
+                password : hashedPassword,
+                avatar : req.body.photoUrl
+            })
+            await newUser.save()
+
+            const jwttoken = jwt.sign({userId : userExist._id})
+
+        }
+    } catch (error) {
+        next(error)
+    }
+}
