@@ -70,19 +70,24 @@ export const GoogleSignIn = async (req,res,next) => {
             res
                 .cookie('access_token',jwttoken,{httpOnly:true,secure: false})
                 .status(200)
-                .json(rest)
+                .json({"userData":rest,"token":jwttoken})
         }else {
-            const generatePassword = Math.random().toString(36).slice(8) + Math.random().toString(36).slice(8);
+            const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = await bcrypt.hash(generatePassword,10)
             const newUser = await userModel({
-                username: req.body.username.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-4),
+                username: req.body.username.split(' ').join('').toLowerCase() + Math.random().toString(9).slice(-4),
                 email : req.body.email,
                 password : hashedPassword,
-                avatar : req.body.photoUrl
+                profilePhoto : req.body.photoUrl
             })
             await newUser.save()
 
-            const jwttoken = jwt.sign({userId : userExist._id})
+            const jwttoken = jwt.sign({userId : userExist._id},process.env.SECRET_KEY)
+            const {password , ...rest} = userExist._doc
+            res
+                .cookie('access_token',jwttoken,{httpOnly:true,secure: false})
+                .status(200)
+                .json({"userData":rest,"token":jwttoken})
 
         }
     } catch (error) {

@@ -1,11 +1,20 @@
 import { Button } from 'flowbite-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AiFillGoogleCircle } from 'react-icons/ai'
 import {GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth'
 import {app} from '../firebase'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { signInSuccess } from '../redux/slices/userSlice'
+import { useNavigate } from 'react-router-dom'
+import { getToken, storeToken } from '../services/LocalStorageService'
+import { setUserToken } from '../redux/slices/tokenSlice'
+
 
 const GoogleAuth = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleGoogleAuth = async () => {
         const provider = new GoogleAuthProvider()
@@ -18,11 +27,23 @@ const GoogleAuth = () => {
                 email : googleResult.user.email,
                 photoUrl : googleResult.user.photoURL
             })
-            console.log(googleResult);
+            // console.log(res);
+            // send userData to reduxToolKit
+            dispatch(signInSuccess(res.data.userData))
+            // store token in locaLStorage
+            storeToken(res.data.token)
+            navigate('/')
         } catch (error) {
             console.log(error);
         }
     }
+    // get token from locaLStorage
+    const token = getToken('token')
+
+    useEffect(()=>{
+      // send token to reduxToolKit
+      dispatch(setUserToken({clientToken:token}))
+    },[,token,dispatch])
 
   return (
     <>
