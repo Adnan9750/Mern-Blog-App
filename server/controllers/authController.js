@@ -78,7 +78,7 @@ export const GoogleSignIn = async (req,res,next) => {
                 username: req.body.username.split(' ').join('').toLowerCase() + Math.random().toString(9).slice(-4),
                 email : req.body.email,
                 password : hashedPassword,
-                profilePhoto : req.body.photoUrl
+                profilePhoto : req.body.profilePhoto
             })
             await newUser.save()
 

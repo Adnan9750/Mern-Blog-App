@@ -25,7 +25,7 @@ const GoogleAuth = () => {
             const res = await axios.post('/server/auth/googleSignIn',{
                 username : googleResult.user.displayName,
                 email : googleResult.user.email,
-                photoUrl : googleResult.user.photoURL
+                profilePhoto : googleResult.user.photoURL
             })
             // console.log(res);
             // send userData to reduxToolKit
@@ -38,12 +38,12 @@ const GoogleAuth = () => {
         }
     }
     // get token from locaLStorage
-    const token = getToken('token')
+    // const token = getToken('token')
 
-    useEffect(()=>{
-      // send token to reduxToolKit
-      dispatch(setUserToken({clientToken:token}))
-    },[,token,dispatch])
+    // useEffect(()=>{
+    //   // send token to reduxToolKit
+    //   dispatch(setUserToken({clientToken:token}))
+    // },[,token,dispatch])
 
   return (
     <>

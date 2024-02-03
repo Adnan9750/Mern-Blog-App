@@ -1,10 +1,17 @@
-import { Button, Navbar, NavbarLink, TextInput } from 'flowbite-react'
+import { Avatar, Button, Dropdown, Navbar, NavbarLink, TextInput } from 'flowbite-react'
 import { Link, useLocation } from 'react-router-dom'
 import { AiOutlineSearch } from "react-icons/ai";
 import {FaMoon} from "react-icons/fa"
+import { useSelector } from 'react-redux';
+import { getToken } from '../services/LocalStorageService';
 
 const Header = () => {
     const path = useLocation().pathname;
+    const {currentUser} = useSelector((state)=>state.user)
+    // const {clientToken} = useSelector((state)=>state.userToken)
+
+    const tokenUser = getToken('token')
+
   return (
     <>
       <Navbar className='border-b-2'>
@@ -35,11 +42,25 @@ const Header = () => {
                 <FaMoon/>
             </Button>
             {/* sign in button */}
-            <Link to='/sign-in'>
-                <Button gradientDuoTone='purpleToBlue' outline>
-                    Sign In
-                </Button>
-            </Link>
+            {currentUser ? (
+                <Dropdown
+                    arrowIcon={false}
+                    inline
+                    label={
+                        <Avatar
+                            alt='user'
+                            img={currentUser.profilePhoto}
+                        />
+                    }
+                />
+            ) : (
+                <Link to='/sign-in'>
+                    <Button gradientDuoTone='purpleToBlue' outline>
+                        Sign In
+                    </Button>
+                </Link>
+            )}
+            
             <Navbar.Toggle />
         </div>
         {/* Navbar Menu */}

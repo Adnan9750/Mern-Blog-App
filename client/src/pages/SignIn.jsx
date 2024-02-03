@@ -51,11 +51,11 @@ const SignIn = () => {
     }
   }
 
-  const token = getToken('token')
+  // const token = getToken('token')
 
-  useEffect(()=>{
-    dispatch(setUserToken({clientToken:token}))
-  },[token,dispatch])
+  // useEffect(()=>{
+  //   dispatch(setUserToken({clientToken:token}))
+  // },[token,dispatch])
 
   return (
     <>
