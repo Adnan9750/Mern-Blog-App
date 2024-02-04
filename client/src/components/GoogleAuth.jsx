@@ -25,9 +25,9 @@ const GoogleAuth = () => {
             const res = await axios.post('/server/auth/googleSignIn',{
                 username : googleResult.user.displayName,
                 email : googleResult.user.email,
-                profilePhoto : googleResult.user.photoURL
+                profileUrl : googleResult.user.photoURL
             })
-            // console.log(res);
+            console.log(res);
             // send userData to reduxToolKit
             dispatch(signInSuccess(res.data.userData))
             // store token in locaLStorage
