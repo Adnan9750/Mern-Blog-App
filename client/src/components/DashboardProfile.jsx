@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import {app} from '../firebase'
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 const DashboardProfile = () => {
     const {currentUser} = useSelector((state)=> state.user)
@@ -13,7 +15,6 @@ const DashboardProfile = () => {
     const [uploadPercentage,setUploadPercentage] = useState(null)
     const [imageUploadError,setImageUploadError] = useState(null)
 
-    console.log(uploadPercentage);
     const imageRef = useRef()
 
     const handleProfileImage = (e) => {
@@ -26,15 +27,18 @@ const DashboardProfile = () => {
 
     useEffect(()=>{
         if (imageFile) {
-            uploadImage()
+            uploadImage(imageFile)
         }
     },[imageFile])
 
-    const uploadImage = async ()=> {
+    const uploadImage =  (imageFile)=> {
+        
+        setImageUploadError(null)
         const storage = getStorage(app)
         const fileName = new Date().getTime() + imageFile.name
         const storageRef = ref(storage,fileName)
         const uploadTask = uploadBytesResumable(storageRef, imageFile)
+
         uploadTask.on(
             'state_changed',
             (snapshot)=>{
@@ -42,8 +46,10 @@ const DashboardProfile = () => {
                 setUploadPercentage(progress.toFixed(0))
             },
             (error)=>{
-                console.error('Upload Error:', error)
                 setImageUploadError('Image could not be uploaded (File must be less then 2MB)')
+                setUploadPercentage(null)
+                setImageFile(null)
+                setImageFileUrl(null)
             },
             ()=>{
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
@@ -64,10 +70,32 @@ const DashboardProfile = () => {
                     ref={imageRef}
                     hidden    
                  />
-                <div className='w-32 h-32 self-center cursor-pointer shadow-md rounded-full'
+                <div className='relative w-32 h-32 self-center cursor-pointer shadow-md rounded-full'
                     onClick={()=>imageRef.current.click()}>
+                    {
+                        uploadPercentage && (
+                            <CircularProgressbar
+                                value={uploadPercentage || 0}
+                                text={`${uploadPercentage}%`}
+                                strokeWidth={5}
+                                styles={{
+                                    root: {
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                    },
+                                    path: {
+                                        stroke: `rgba(62,152,199, ${uploadPercentage / 100})`
+                                    }
+                                }}
+                            />
+                        )
+                    }
                     <img src={imageFileUrl || currentUser.avatar} alt='profile_pic' 
-                    className='rounded-full w-full h-full object-cover border-8 border-[lightgray]'/>
+                    className={`rounded-full w-full h-full object-cover border-8 border-[lightgray]
+                        ${uploadPercentage && uploadPercentage < 100 && 'opacity-60'}`}/>
                 </div>
                 {
                     imageUploadError && (
