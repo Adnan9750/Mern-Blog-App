@@ -9,7 +9,7 @@ export const userVerification = (req,res,next) =>{
 
     jwt.verify(token,process.env.SECRET_KEY,(err,user) =>{
 
-        if (err) return res.status(200).json('Unauthorized User')
+        if (err) { return res.status(200).json('Unauthorized User') }
 
         req.user = user
         next()

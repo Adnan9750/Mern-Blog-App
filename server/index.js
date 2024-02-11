@@ -6,6 +6,7 @@ const app = express()
 const port = process.env.PORT 
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import cookieParser from 'cookie-parser'
 // import cors from 'cors'
 
 // database connection
@@ -14,6 +15,8 @@ connDB();
 // app.use(cors())
 
 app.use(express.json())
+
+app.use(cookieParser())
 
 // routes
 app.use('/server/user',userRoutes)

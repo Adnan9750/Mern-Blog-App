@@ -1,15 +1,20 @@
 
 import { Alert, Button, TextInput } from 'flowbite-react'
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import {app} from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import axios from 'axios'
+import { updataUser } from '../redux/slices/userSlice'
 
 const DashboardProfile = () => {
+
+    const dispatch = useDispatch()
     const {currentUser} = useSelector((state)=> state.user)
 
+    const [formData,setFormData] = useState({})
     const [imageFile,setImageFile] = useState(null)
     const [imageFileUrl,setImageFileUrl] = useState(null)
     const [uploadPercentage,setUploadPercentage] = useState(null)
@@ -23,6 +28,13 @@ const DashboardProfile = () => {
             setImageFile(file)
             setImageFileUrl(URL.createObjectURL(file))
         }
+    }
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id] : e.target.value
+        })
     }
 
     useEffect(()=>{
@@ -52,18 +64,28 @@ const DashboardProfile = () => {
                 setImageFileUrl(null)
             },
             ()=>{
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
-                    setImageFileUrl(downloadURL)
+                getDownloadURL(uploadTask.snapshot.ref)
+                .then((downloadURL)=>{
+                    setFormData({...formData,avatar:downloadURL})
+                    // setImageFileUrl(downloadURL)
                 })
             }
         )
+    }
+
+    const formSubmit = async (e) =>{
+        e.preventDefault()
+
+        const res = await axios.put(`/server/user/update/${currentUser._id}`, formData)
+        dispatch(updataUser(res.data))
+        console.log(res);
     }
 
   return (
     <>
         <div className='max-w-lg mx-auto p-3 w-full'>
             <h1 className='my-7 font-semibold text-3xl text-center'>Profile</h1>
-            <form className='flex flex-col gap-4'>
+            <form className='flex flex-col gap-4' onSubmit={formSubmit}>
                 <input type='file' 
                     accept='image/*' 
                     onChange={handleProfileImage}
@@ -107,17 +129,20 @@ const DashboardProfile = () => {
                     placeholder='username'
                     defaultValue={currentUser.username}
                     id='username'
+                    onChange={handleChange}
                 />
                 <TextInput 
                     type='email'
                     placeholder='email'
                     defaultValue={currentUser.email}
                     id='email'
+                    onChange={handleChange}
                 />
                 <TextInput 
                     type='password'
                     placeholder='Password'
                     id='password'
+                    onChange={handleChange}
                 />
                 <Button type='submit' gradientDuoTone='purpleToBlue' outline>
                     Update
