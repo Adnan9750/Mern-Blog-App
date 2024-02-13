@@ -43,6 +43,11 @@ const userSlice = createSlice({
         deleteUser : (state,action) => {
             state.loading = false,
             state.currentUser = null
+            state.error = {
+                status : false,
+                message : null,
+                errorType : null
+            }
         },
         signoutUser : (state,action) => {
             state.loading = false,
