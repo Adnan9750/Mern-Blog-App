@@ -7,7 +7,7 @@ import {app} from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios'
-import { deleteUser, updataUser } from '../redux/slices/userSlice'
+import { deleteUser, signoutUser, updataUser } from '../redux/slices/userSlice'
 import {useNavigate} from 'react-router-dom'
 import {HiOutlineExclamationCircle} from 'react-icons/hi'
 
@@ -111,6 +111,13 @@ const DashboardProfile = () => {
         setShowModel(false)
         const res = await axios.delete(`/server/user/delete/${currentUser._id}`)
         dispatch(deleteUser(res.data))
+        // removeToken(null)
+    }
+
+    const handleSignOut = async () => {
+        const res = await axios.post('/server/user/signout')
+        console.log(res);
+        dispatch(signoutUser(res.data))
     }
 
   return (
@@ -181,7 +188,7 @@ const DashboardProfile = () => {
                 </Button>
                 <div className='text-red-500 flex justify-between'>
                     <span className='cursor-pointer' onClick={()=>setShowModel(true)}>Delete Account</span>
-                    <span className='cursor-pointer'>Sign Out</span>
+                    <span className='cursor-pointer' onClick={handleSignOut}>Sign Out</span>
                 </div>
             </form>
             {

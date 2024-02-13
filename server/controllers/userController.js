@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import userModel from '../models/userModel.js';
+import { response } from 'express';
 
 export const updateUser = async (req,res)=> {
     if(req.user.userId !== req.params.id) {
@@ -48,4 +49,10 @@ export const deleteUser = async (req,res) => {
 
     res.clearCookie('access_token',{httpOnly:true,secure:false})
     res.status(200).json('User has been Deleted')
+}
+
+export const signOut = async (req,res) => {
+    
+    res.clearCookie('access_token',{httpOnly:true,secure:false}).status(200).json("User has been signed out")
+
 }

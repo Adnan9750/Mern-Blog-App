@@ -41,10 +41,13 @@ const userSlice = createSlice({
         },
         deleteUser : (state,action) => {
             state.currentUser = null
+        },
+        signoutUser : (state,action) => {
+            state.currentUser = null
         }
     }
 });
 
-export const {signInStart,signInSuccess,signinFailure,updataUser,deleteUser} = userSlice.actions
+export const {signInStart,signInSuccess,signinFailure,updataUser,deleteUser,signoutUser} = userSlice.actions
 
 export default userSlice.reducer

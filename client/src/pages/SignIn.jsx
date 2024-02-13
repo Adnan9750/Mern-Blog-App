@@ -39,7 +39,7 @@ const SignIn = () => {
         setTimeout(()=>{
           dispatch(signInSuccess(res.data.userData))
           // store token in localStorage
-          storeToken(res.data.token)
+          // storeToken(res.data.token)
           navigate('/')
         },2000)
       }
