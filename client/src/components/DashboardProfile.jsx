@@ -115,7 +115,7 @@ const DashboardProfile = () => {
     }
 
     const handleSignOut = async () => {
-        const res = await axios.post('/server/user/signout')
+        await axios.post('/server/user/signout')
         dispatch(signoutUser())
     }
 
