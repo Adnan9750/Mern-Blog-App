@@ -37,13 +37,21 @@ const userSlice = createSlice({
             }
         },
         updataUser : (state,action) => {
+            state.loading = false,
             state.currentUser = action.payload
         },
         deleteUser : (state,action) => {
+            state.loading = false,
             state.currentUser = null
         },
         signoutUser : (state,action) => {
+            state.loading = false,
             state.currentUser = null
+            state.error = {
+                status : false,
+                message : null,
+                errorType : null
+            }
         }
     }
 });
