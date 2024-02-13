@@ -1,9 +1,14 @@
+import axios from 'axios'
 import { Sidebar } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import {HiArrowSmRight, HiUser} from 'react-icons/hi'
+import { useDispatch } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
+import { signoutUser } from '../redux/slices/userSlice'
 
 const DashboardSidebar = () => {
+
+    const dispatch = useDispatch()
     const location = useLocation()
     const [tab,setTab] = useState('')
 
@@ -14,6 +19,12 @@ const DashboardSidebar = () => {
             setTab(taburl)
         }
     },[location.search])
+
+    const handleSignOut = async () => {
+        await axios.post('/server/user/signout')
+        dispatch(signoutUser())
+    }
+
   return (
     <>
         <Sidebar className='w-full'>
@@ -25,7 +36,7 @@ const DashboardSidebar = () => {
                             Profile
                         </Sidebar.Item>
                     </Link>
-                    <Sidebar.Item  icon={HiArrowSmRight} className='cursor-pointer' >
+                    <Sidebar.Item  icon={HiArrowSmRight} className='cursor-pointer' onClick={handleSignOut}>
                         SignOut
                     </Sidebar.Item>
                 </Sidebar.ItemGroup>

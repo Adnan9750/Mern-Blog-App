@@ -5,6 +5,8 @@ import {FaMoon,FaSun} from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux';
 import { getToken } from '../services/LocalStorageService';
 import { toggleTheme } from '../redux/slices/themeSlice';
+import { signoutUser } from '../redux/slices/userSlice';
+import axios from 'axios';
 
 const Header = () => {
     const path = useLocation().pathname;
@@ -15,6 +17,12 @@ const Header = () => {
     const dispatch = useDispatch()
 
     const tokenUser = getToken('token')
+
+    const handleSignOut = async () => {
+        const res = await axios.post('/server/user/signout')
+        console.log(res);
+        dispatch(signoutUser())
+    }
 
   return (
     <>
@@ -71,7 +79,7 @@ const Header = () => {
                         <Dropdown.Item>Profile</Dropdown.Item>
                     </Link>
                     <Dropdown.Divider/>
-                    <Dropdown.Item>Sign Out</Dropdown.Item>
+                    <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
                 </Dropdown>
             ) : (
                 <Link to='/sign-in'>
