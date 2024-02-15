@@ -8,7 +8,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import axios from 'axios'
 import { deleteUser, signoutUser, updataUser } from '../redux/slices/userSlice'
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {HiOutlineExclamationCircle} from 'react-icons/hi'
 
 const DashboardProfile = () => {
@@ -185,6 +185,15 @@ const DashboardProfile = () => {
                 <Button type='submit' gradientDuoTone='purpleToBlue' outline>
                     Update
                 </Button>
+                {
+                    currentUser.isAdmin && (
+                        <Link to={'/createPost'}>
+                            <Button type='button' gradientDuoTone='purpleToBlue'  className='w-full'>
+                                Create a Post
+                            </Button>
+                        </Link>
+                    )
+                }
                 <div className='text-red-500 flex justify-between'>
                     <span className='cursor-pointer' onClick={()=>setShowModel(true)}>Delete Account</span>
                     <span className='cursor-pointer' onClick={handleSignOut}>Sign Out</span>

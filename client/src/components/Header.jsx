@@ -20,7 +20,6 @@ const Header = () => {
 
     const handleSignOut = async () => {
         const res = await axios.post('/server/user/signout')
-        console.log(res);
         dispatch(signoutUser())
     }
 
@@ -56,7 +55,7 @@ const Header = () => {
                 pill 
                 onClick={()=>dispatch(toggleTheme())}
             >
-                { theme === 'light' ? <FaSun/> : <FaMoon/>  }
+                { theme === 'light' ? <FaMoon/> : <FaSun/>  }
             </Button>
             {/* sign in button */}
             {currentUser ? (
@@ -75,6 +74,11 @@ const Header = () => {
                         <span className='block text-sm'>@{currentUser.username}</span>
                         <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
                     </Dropdown.Header>
+                    {
+                        currentUser.isAdmin && (
+                            <Dropdown.Item>DashBoard</Dropdown.Item>
+                        )
+                    }
                     <Link to='/dashboard?tab=profile'>
                         <Dropdown.Item>Profile</Dropdown.Item>
                     </Link>

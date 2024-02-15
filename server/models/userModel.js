@@ -2,21 +2,25 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username :{
-        type: 'string',
+        type: String,
         required: true
     },
     email:{
-        type: 'string',
+        type: String,
         required: true,
         unique: true
     },
     password: {
-        type: 'string',
+        type: String,
         required: true
     },
     avatar:{
-        type: 'string',
+        type: String,
         default: 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg'
+    },
+    isAdmin:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true});
 
