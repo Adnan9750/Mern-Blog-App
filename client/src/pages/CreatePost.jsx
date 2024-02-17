@@ -22,7 +22,10 @@ const CreatePost = () => {
                 <FileInput type="file" accept="image/*" />
                 <Button type="button" size='sm' outline>Upload Image</Button>
             </div>
-            <ReactQuill theme="snow" placeholder="Write something..."  className='h-72 mb-12'/>
+            <ReactQuill theme="snow" placeholder="Write something..."  className='h-72 mb-12' required/>
+            <Button type="submit" >
+                Publish
+            </Button>
         </form>
       </div>
     </>
