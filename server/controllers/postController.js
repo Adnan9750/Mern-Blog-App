@@ -1,4 +1,5 @@
 import PostModel from "../models/postModel.js";
+import { handleError } from "../utils/error.js";
 
 export const createPost = async (req, res, next) => {
     console.log(req.user);
@@ -62,6 +63,19 @@ export const getPosts = async (req,res,next) => {
             lastMonthPosts
         })
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deletePost = async (req,res,next) => {
+    if(!req.user.isAdmin && req.user.id !== req.params.userID){
+        return res.status(403).json('You are not allowed to delete this post')
+        // return next(handleError(403,'You are not allowed to delete this post'))
+    }
+    try {
+        await PostModel.findByIdAndDelete(req.params.postID)
+        res.status(200).json('Post has been deleted')
     } catch (error) {
         next(error)
     }
