@@ -11,6 +11,7 @@ const DashboardPost = () => {
 
   const {currentUser} = useSelector((state)=>state.user)
   const [userPost,setUserPost] = useState([])
+  const [showMore,setShowMore] = useState(true)
   // console.log(userPost); 
 
   useEffect(()=>{
@@ -19,6 +20,9 @@ const DashboardPost = () => {
         const res = await axios.get(`/server/post/getposts?userID=${currentUser._id}`)
         if(res.status === 200){
           setUserPost(res.data.posts)
+          if(res.data.posts.length < 9){
+            setShowMore(false)
+          }
         }
       } catch (error) {
         console.log(error.message);
@@ -31,9 +35,25 @@ const DashboardPost = () => {
 
   },[currentUser._id])
 
+  const handleShowMore = async () =>{
+    const startIndex = userPost.length;
+    try {
+      const res = await axios.get(`/server/post/getposts?userID=${currentUser._id}&startIndex=${startIndex}`)
+      // console.log(res);
+      if(res.status === 200) {
+        setUserPost((pervPost) =>[...pervPost,...res.data.posts])
+        if(res.data.posts.length < 9){
+          setShowMore(false)
+        }
+      }
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <>
-      <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100
+      <div className='table-auto overflow-x-scroll w-screen p-5 scrollbar scrollbar-track-slate-100
         scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
         {
           currentUser.isAdmin &&  userPost.length > 0 ? (
@@ -50,8 +70,8 @@ const DashboardPost = () => {
                   </Table.HeadCell>
                 </Table.Head>
                 {
-                  userPost.map((currPost)=>(
-                    <Table.Body className='divide-y'>
+                  userPost.map((currPost,index)=>(
+                    <Table.Body className='divide-y' key={index}>
                       <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                         <Table.Cell>{new Date(currPost.createdAt).toLocaleDateString()}</Table.Cell>
                         <Table.Cell>
@@ -66,10 +86,10 @@ const DashboardPost = () => {
                             </Link>
                         </Table.Cell>
                         <Table.Cell>{currPost.category}</Table.Cell>
-                        <Table.Cell className='text-lg text-red-500'>
+                        <Table.Cell className='text-xl text-red-500'>
                             <span><MdDelete/></span>
                         </Table.Cell>
-                        <Table.Cell className='text-lg text-teal-500'>
+                        <Table.Cell className='text-xl text-teal-500'>
                             <Link to={`/update-post/${currPost._id}`}>
                               <span><FaRegEdit/></span>
                             </Link>
@@ -79,6 +99,14 @@ const DashboardPost = () => {
                   ))
                 }
               </Table>
+              {
+                showMore && ( 
+                  <button onClick={handleShowMore} 
+                    className='w-full self-center text-teal-500 text-md font-semibold py-7'>
+                    Show More
+                  </button>
+                )
+              }
             </>
           ) : (
             <p>You have no post yet</p>
