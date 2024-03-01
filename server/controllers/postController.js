@@ -2,7 +2,7 @@ import PostModel from "../models/postModel.js";
 import { handleError } from "../utils/error.js";
 
 export const createPost = async (req, res, next) => {
-    console.log(req.user);
+    // console.log(req.user);
     if(!req.user.isAdmin){
         return res.status(403).json('You are not allowed to create a post')
     }
@@ -69,13 +69,37 @@ export const getPosts = async (req,res,next) => {
 }
 
 export const deletePost = async (req,res,next) => {
-    if(!req.user.isAdmin && req.user.id !== req.params.userID){
+    if(!req.user.isAdmin && req.user.userId !== req.params.userID){
         return res.status(403).json('You are not allowed to delete this post')
         // return next(handleError(403,'You are not allowed to delete this post'))
     }
     try {
         await PostModel.findByIdAndDelete(req.params.postID)
         res.status(200).json('Post has been deleted')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updatePost = async (req,res,next) => {
+    console.log(req.user.userId);
+    if(req.user.isAdmin && req.user.userId !== req.params.userID){
+        return res.status(403).json('You are not allowed to update this post')
+    }
+    try {
+        // const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID, req.body,{new: true})
+        const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID,
+            {
+                $set: {
+                    title: req.body.title,
+                    category: req.body.category,
+                    content: req.body.content,
+                    image: req.body.image
+                }
+            },{new: true})
+
+            res.status(200).json(updatedPost)
+
     } catch (error) {
         next(error)
     }

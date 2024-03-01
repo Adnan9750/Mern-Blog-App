@@ -62,7 +62,7 @@ const DashboardPost = () => {
         perv.filter((post)=>post._id !== postToDelete)
       );
     }
-    // console.log(res);
+
   }
 
   return (
@@ -106,7 +106,7 @@ const DashboardPost = () => {
                                 setPostToDelete(currPost._id)
                               }}
                             >
-                              <MdDelete/>
+                              <MdDelete title='Delete'/>
                             </span>
                         </Table.Cell>
                         <Table.Cell className='text-xl text-teal-500'>

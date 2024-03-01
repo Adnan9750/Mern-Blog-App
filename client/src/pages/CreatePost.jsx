@@ -56,7 +56,7 @@ const CreatePost = () => {
     } catch (error) {
       setUploadImageError('Image upload failed')
       setImageUploadProgress(null)
-      console.log(error);
+      // console.log(error);
     }
   }
 
