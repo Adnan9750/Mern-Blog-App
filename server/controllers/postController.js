@@ -82,7 +82,7 @@ export const deletePost = async (req,res,next) => {
 }
 
 export const updatePost = async (req,res,next) => {
-    console.log(req.user.userId);
+    
     if(req.user.isAdmin && req.user.userId !== req.params.userID){
         return res.status(403).json('You are not allowed to update this post')
     }

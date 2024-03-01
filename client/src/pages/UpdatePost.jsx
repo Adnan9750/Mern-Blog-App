@@ -145,7 +145,7 @@ const UpdatePost = () => {
                 <img 
                   src={formData.image}
                   alt="upload_pic"
-                  className="w-full h-[450px] object-fill"
+                  className="w-full h-[450px] object-cover"
                 />
               )
             }

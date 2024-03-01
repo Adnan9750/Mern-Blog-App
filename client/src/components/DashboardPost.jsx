@@ -91,7 +91,7 @@ const DashboardPost = () => {
                         <Table.Cell>
                           <Link to={`/post/${currPost.slug}`}>
                             <img src={currPost.image} alt='post_pic' 
-                              className='w-20 h-15 object-cover bg-slate-500'/>
+                              className='w-20 h-20 object-cover bg-slate-500'/>
                           </Link>
                         </Table.Cell>
                         <Table.Cell className='font-medium text-gray-900 dark:text-white'>
