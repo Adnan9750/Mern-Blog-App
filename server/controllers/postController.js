@@ -82,21 +82,21 @@ export const deletePost = async (req,res,next) => {
 }
 
 export const updatePost = async (req,res,next) => {
-    
+
     if(req.user.isAdmin && req.user.userId !== req.params.userID){
         return res.status(403).json('You are not allowed to update this post')
     }
     try {
-        // const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID, req.body,{new: true})
-        const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID,
-            {
-                $set: {
-                    title: req.body.title,
-                    category: req.body.category,
-                    content: req.body.content,
-                    image: req.body.image
-                }
-            },{new: true})
+        const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID, req.body,{new: true})
+        // const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID,
+        //     {
+        //         $set: {
+        //             title: req.body.title,
+        //             category: req.body.category,
+        //             content: req.body.content,
+        //             image: req.body.image
+        //         }
+        //     },{new: true})
 
             res.status(200).json(updatedPost)
 
@@ -104,3 +104,4 @@ export const updatePost = async (req,res,next) => {
         next(error)
     }
 }
+
