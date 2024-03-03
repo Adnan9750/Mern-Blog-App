@@ -58,7 +58,7 @@ export const signOut = async (req,res) => {
 
 export const getUsers = async (req, res,next) => {
     if(!req.user.isAdmin){
-        return res.status().json('You have no permissions to see all users')
+        return res.status(403).json('You have no permissions to see all users')
     }
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
