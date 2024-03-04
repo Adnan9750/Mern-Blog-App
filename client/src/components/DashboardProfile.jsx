@@ -109,7 +109,7 @@ const DashboardProfile = () => {
 
     const handleDelete = async () =>{
         setShowModel(false)
-        const res = await axios.delete(`/server/user/delete/${currentUser._id}`)
+        const res = await axios.delete(`/server/user/deleteuser/${currentUser._id}`)
         dispatch(deleteUser(res.data))
         // removeToken(null)
     }

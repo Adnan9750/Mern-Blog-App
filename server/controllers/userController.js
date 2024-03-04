@@ -40,13 +40,11 @@ export const updateUser = async (req,res)=> {
 
 export const deleteUser = async (req,res) => {
 
-    if(req.user.userId !== req.params.id) {
+    if(!req.user.isAdmin && req.user.userId !== req.params.id) {
         return res.status(401).json('Unauthorized access can only delete your own account')
     }
 
     await userModel.findByIdAndDelete({_id:req.params.id})
-
-    res.clearCookie('access_token',{httpOnly:true,secure:false})
     res.status(200).json('User has been Deleted')
 }
 

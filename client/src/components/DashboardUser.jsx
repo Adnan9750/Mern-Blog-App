@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 import { Button, Modal, Table } from 'flowbite-react';
 import {Link} from 'react-router-dom'
 import { MdDelete } from "react-icons/md";
-import { FaCheck, FaRegEdit, FaTimes } from "react-icons/fa";
+import { FaCheck, FaTimes } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 const DashboardUser = () => {
@@ -19,7 +19,7 @@ const DashboardUser = () => {
   useEffect(()=>{
     const fetchUsers = async () =>{
       try {
-        const res = await axios.get(`/server/user/getusers`)
+        const res = await axios.get('/server/user/getusers')
 
         if(res.status === 200){
           setUsers(res.data.users)
@@ -54,6 +54,18 @@ const DashboardUser = () => {
     }
   }
 
+//   const handleDeleteUser = async () => {
+//     setShowModel(false)
+
+//     const res = await axios.delete(`/server/user/deleteuser/${userToDelete}`)
+//     console.log(res);
+//     if(res.status === 200) {
+//         setUsers((pervUser)=>pervUser.filter((user)=> user._id !== userToDelete))
+//         setShowModel(false)
+//     };
+
+//   }
+
 //   const handleDeletePost = async () =>{
 //     setShowModel(false);
 
@@ -65,6 +77,21 @@ const DashboardUser = () => {
 //     }
 
 //   }
+
+const handleDeleteUser = async () => {
+    setShowModel(false);
+  
+    try {
+      const res = await axios.delete(`/server/user/deleteuser/${userToDelete}`);
+      console.log(res);
+      if (res.status === 200) {
+        setUsers(prevUsers => prevUsers.filter(user => user._id !== userToDelete));
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error.message);
+      // Handle deletion error here (e.g., show notification)
+    }
+  };
 
   return (
     <>
@@ -83,13 +110,13 @@ const DashboardUser = () => {
                   <Table.HeadCell>Delete</Table.HeadCell>
                 </Table.Head>
                 {
-                  users.map((currUser,index)=>(
-                    <Table.Body className='divide-y' key={index}>
+                  users.map((currUser)=>(
+                    <Table.Body className='divide-y' key={currUser._id}>
                       <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                         <Table.Cell>{new Date(currUser.createdAt).toLocaleDateString()}</Table.Cell>
                         <Table.Cell>
                             <img src={currUser.avatar} alt='user_profile' 
-                              className='w-12 h-12 object-cover bg-slate-500 rounded-full'/>
+                              className='w-10 h-10 object-cover bg-slate-500 rounded-full'/>
                         </Table.Cell>
                         <Table.Cell className='font-medium text-gray-900 dark:text-white'>
                                 { currUser.username }
@@ -139,7 +166,7 @@ const DashboardUser = () => {
                             Are you sure you want to delete this user
                         </h3>
                         <div className='flex justify-center gap-4'>
-                            <Button color='failure' >Yes, I'm sure</Button>
+                            <Button color='failure' onClick={handleDeleteUser}>Yes, I'm sure</Button>
                             <Button color='gray' onClick={()=>setShowModel(false)}>No, cancel</Button>
                         </div>
                     </div>
