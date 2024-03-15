@@ -8,6 +8,6 @@ const router = express.Router();
 router.post('/create',userVerification,createPost)
 router.get('/getposts',getPosts)
 router.delete('/deletepost/:postID/:userID',userVerification,deletePost)
-router.put('/updatepost/:postID/:userID',userVerification,updatePost)
+router.post('/updatepost/:postID/:userID',userVerification,updatePost)
 
 export default router

@@ -15,12 +15,14 @@ const UpdatePost = () => {
 
     const {currentUser} = useSelector((state)=>state.user)
 
+    
     const [formData,setFormData] = useState({})
     const [file,setFile] = useState(null)
     const [imageUploadProgress,setImageUploadProgress] = useState(null)
     const [uploadImageError,setUploadImageError] = useState(null)
     const [publishError,setPublishError] = useState(null)
 
+    // console.log(formData._id);
     const navigate = useNavigate()
 
     const {postId} = useParams()
@@ -29,6 +31,7 @@ const UpdatePost = () => {
         try {
             const fetchSinglePost = async () => {
                 const res = await axios.get(`/server/post/getposts?postId=${postId}`)
+                // console.log(res);
                 if(res.status === 200) {
                     setPublishError(null)
                     setFormData(res.data.posts[0])
@@ -85,7 +88,8 @@ const UpdatePost = () => {
     const handleSubmit = async (e) =>{
         e.preventDefault()
         try {
-          const res = await axios.put(`/server/post/updatepost/${formData._id}/${currentUser._id}`,formData)
+          const res = await axios.post(`/server/post/updatepost/${formData._id}/${currentUser._id}`,formData)
+          console.log(res);
           navigate(`/blogPost/${res.data.slug}`) 
           console.log(res);
         } catch (error) {
@@ -105,7 +109,7 @@ const UpdatePost = () => {
                   required id="title" 
                   className="flex-1"
                   onChange={(e)=>setFormData({...formData, title: e.target.value})}
-                  value={formData.title}
+                  defaultValue={formData.title}
                   />
                 <Select onChange={(e)=>setFormData({...formData, category:e.target.value})}
                     value={formData.category}
@@ -151,10 +155,10 @@ const UpdatePost = () => {
             }
             <ReactQuill 
               theme="snow" 
+              value={formData.content}
               placeholder="Write something..."  
               className='h-72 mb-12' required
               onChange={(value)=>setFormData({...formData,content:value})}
-              value={formData.content}
               />
             <Button type="submit" >
                 Update Post

@@ -54,43 +54,19 @@ const DashboardUser = () => {
     }
   }
 
-//   const handleDeleteUser = async () => {
-//     setShowModel(false)
-
-//     const res = await axios.delete(`/server/user/deleteuser/${userToDelete}`)
-//     console.log(res);
-//     if(res.status === 200) {
-//         setUsers((pervUser)=>pervUser.filter((user)=> user._id !== userToDelete))
-//         setShowModel(false)
-//     };
-
-//   }
-
-//   const handleDeletePost = async () =>{
-//     setShowModel(false);
-
-//     const res = await axios.delete(`/server/post/deletepost/${postToDelete}/${currentUser._id}`)
-//     if(res.status === 200){
-//       setUsers((perv)=>
-//         perv.filter((post)=>post._id !== postToDelete)
-//       );
-//     }
-
-//   }
-
 const handleDeleteUser = async () => {
     setShowModel(false);
   
-    try {
+    // try {
       const res = await axios.delete(`/server/user/deleteuser/${userToDelete}`);
       console.log(res);
       if (res.status === 200) {
         setUsers(prevUsers => prevUsers.filter(user => user._id !== userToDelete));
       }
-    } catch (error) {
-      console.error('Error deleting user:', error.message);
-      // Handle deletion error here (e.g., show notification)
-    }
+    // } catch (error) {
+    //   console.error('Error deleting user:', error.message);
+    //   // Handle deletion error here (e.g., show notification)
+    // }
   };
 
   return (

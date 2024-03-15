@@ -69,7 +69,7 @@ export const getPosts = async (req,res,next) => {
 }
 
 export const deletePost = async (req,res,next) => {
-    if(!req.user.isAdmin && req.user.userId !== req.params.userID){
+    if(!req.user.isAdmin || req.user.userId !== req.params.userID){
         return res.status(403).json('You are not allowed to delete this post')
         // return next(handleError(403,'You are not allowed to delete this post'))
     }
@@ -83,25 +83,27 @@ export const deletePost = async (req,res,next) => {
 
 export const updatePost = async (req,res,next) => {
 
-    if(req.user.isAdmin && req.user.userId !== req.params.userID){
+    if(!req.user.isAdmin || req.user.userId !== req.params.userID){
         return res.status(403).json('You are not allowed to update this post')
     }
     try {
-        const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID, req.body,{new: true})
-        // const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID,
-        //     {
-        //         $set: {
-        //             title: req.body.title,
-        //             category: req.body.category,
-        //             content: req.body.content,
-        //             image: req.body.image
-        //         }
-        //     },{new: true})
+        // const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID, req.body,{new: true})
+        // const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+        const updatedPost = await PostModel.findByIdAndUpdate(req.params.postID,
+            {
+                $set: {
+                    title: req.body.title,
+                    category: req.body.category,
+                    content: req.body.content,
+                    // slug,
+                    image: req.body.image
+                }
+            },{new: true})
 
             res.status(200).json(updatedPost)
 
     } catch (error) {
-        next(error)
+        return res.status(500).json('Internal server error');
     }
 }
 
