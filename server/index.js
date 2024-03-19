@@ -6,7 +6,8 @@ const app = express()
 const port = process.env.PORT 
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import postRoutes from './routes/postRoute.js'
+import postRoutes from './routes/postRoute.js';
+import commentRoutes from './routes/commentRoutes.js'
 import cookieParser from 'cookie-parser'
 // import cors from 'cors'
 
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use('/server/user',userRoutes)
 app.use('/server/auth',authRoutes)
 app.use('/server/post',postRoutes)
+app.use('/server/comment',commentRoutes)
 
 app.listen(port,()=>{
     console.log(`Server is running at port ${port}`);
