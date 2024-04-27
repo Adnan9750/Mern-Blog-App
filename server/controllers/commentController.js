@@ -21,3 +21,12 @@ export const AddComment = async (req,res,next) => {
         next(error);
     }
 }
+
+export const GetPostComments = async (req,res,next) => {
+    try {
+        const postComment = await CommentModel.find({postId:req.params.postId}).sort({createdAt:-1});
+        res.status(200).send(postComment)
+    } catch (error) {
+        next(error);
+    }
+}

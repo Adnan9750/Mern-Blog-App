@@ -1,14 +1,18 @@
 
 import axios from 'axios'
 import { Button, Textarea } from 'flowbite-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {useSelector} from 'react-redux'
 import { Link } from 'react-router-dom'
+import Comment from './Comment'
 
 const CommentPart = ({postId}) => {
 
     const {currentUser} = useSelector((state)=>state.user)
     const [comment,setComment] = useState('')
+
+    const [postComments,setPostComments] = useState([])
+    // console.log(postComments);
 
     const handleForm = async (e) =>{
         e.preventDefault()
@@ -23,8 +27,20 @@ const CommentPart = ({postId}) => {
         // console.log(res);
         if(res.status === 200){
             setComment('')
+            // setPostComments(res.data)
         }
     }
+
+    useEffect(()=>{
+        const getPostComments = async () => {
+            const res = await axios.get(`/server/comment/getPostComment/${postId}`)
+            if(res.status === 200){
+                setPostComments(res.data)
+            }
+            // console.log(res);
+        }
+        getPostComments();
+    },[postId])
 
   return (
     <>
@@ -67,6 +83,27 @@ const CommentPart = ({postId}) => {
             </div>
         </form>
       )}
+      {postComments.length === 0 ? (
+            <p className='text-sm my-5'>No Comment Yet.</p>
+        ):(
+            <>
+                <div className='flex items-center gap-2 text-sm my-5'>
+                    <p>Comments</p>
+                    <div className='border border-gray-400 py-1 px-2 rounded-sm'>
+                        <p>{postComments.length}</p>
+                    </div>
+                </div>
+                {
+                    postComments.map((currentComment)=>(
+                        <Comment 
+                            key={currentComment._id}
+                            currentComment={currentComment}
+                        />
+                    ))
+                }
+            </>
+        )
+      }
       </div>
     </>
   )

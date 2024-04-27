@@ -64,7 +64,7 @@ const CreatePost = () => {
     e.preventDefault()
     try {
       const res = await axios.post('/server/post/create',formData)
-      navigate(`/blogPost/${res.data.slug}`) 
+      navigate(`/post/${res.data.slug}`) 
       console.log(res);
     } catch (error) {
       setPublishError('Something went wrong. Please try again')

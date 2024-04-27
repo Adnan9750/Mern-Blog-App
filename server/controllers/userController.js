@@ -94,3 +94,18 @@ export const getUsers = async (req, res,next) => {
         next(error)
     }
 }
+
+export const GetCommentedUser = async (req,res,next) =>{
+    try {
+        const commentedUser = await userModel.findById(req.params.userID)
+
+        if(!commentedUser){
+            return res.status(404).json('User not found')
+        }
+
+        const {password,...rest} = commentedUser._doc
+        res.status(200).json(rest)
+    } catch (error) {
+        next(error)
+    }
+}
