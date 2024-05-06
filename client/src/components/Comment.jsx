@@ -1,24 +1,31 @@
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const Comment = ({currentComment}) => {
 
+    const [user,setUser] = useState({})
+
     useEffect(()=>{
         const getCommentedUser = async () => {
-          try {
+          // try {
             const res = await axios.get(`/server/user/${currentComment.userId}`);
-            console.log(res.data); // Assuming you want to log the response data
-        } catch (error) {
-            console.error('Error fetching commented user:', error);
-        }
+            if(res.status === 200){
+              setUser(res.data)
+            }
+            // console.log(res.data); 
+        // } catch (error) {
+        //     console.error('Error fetching commented user:', error);
+        // }
         }
         getCommentedUser();
     },[currentComment])
 
   return (
     <>
-      <h1>Comment</h1>
+      <div>
+        <img src={user.avatar} alt={user.username} className='w-10 h-10 rounded-full bg-gray-200' />
+      </div>
     </>
   )
 }
