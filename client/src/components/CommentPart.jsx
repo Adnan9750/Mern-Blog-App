@@ -27,7 +27,7 @@ const CommentPart = ({postId}) => {
         // console.log(res);
         if(res.status === 200){
             setComment('')
-            // setPostComments(res.data)
+            setPostComments([res.data,...postComments])
         }
     }
 

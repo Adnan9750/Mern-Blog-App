@@ -95,6 +95,7 @@ export const getUsers = async (req, res,next) => {
     }
 }
 
+// user who comment so to get that user
 export const GetCommentedUser = async (req,res,next) =>{
     try {
         const commentedUser = await userModel.findById(req.params.userID)
